@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Post</title>
+</head>
+<body>
+  <h1>Update post</h1>
+  <form action='/api/posts' method="post">
+    <div>
+      <label>Title</label>
+      <input type="text" name="title" required>
+    </div>
+    <div>
+      <label>Description</label>
+      <input type="text" name="description" required>
+    </div>
+    <input type="hidden" name="postId" value="6213958c335cf910ca935968" />
+    <input type="hidden" name="_method" value="PUT">
+    <button type="submit">Update post</button>
+  </form>
+</body>
+</html>
