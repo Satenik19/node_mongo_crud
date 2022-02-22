@@ -1,31 +1,31 @@
 import mongoose from 'mongoose';
 import Post from '../models/post.js';
+import User from '../models/user.js';
 
-export function createPost(req, res) {
-    console.log(req.body.title, 'title');
-    console.log( new Date().getTime(), 'description');
-    const post = new Post({
-        _id: mongoose.Types.ObjectId(),
-        title: req.body.title,
-        description: req.body.description,
-        created_date: new Date().getTime(),
-    });
-    return post
-        .save()
-        .then((newPost) => {
-            return res.status(200).json({
-                success: true,
-                message: 'New post created successfully',
-                post: newPost,
-            });
-        })
-        .catch((error) => {
-            res.status(500).json({
-                success: false,
-                message: 'Something went wrong.',
-                error: error.message,
-            });
+export async function createPost(req, res) {
+    try {
+        const user = await User.findOne({ first_name: "Satenik" });
+        const post = new Post({
+            _id: mongoose.Types.ObjectId(),
+            title: req.body.title,
+            description: req.body.description,
+            created_date: new Date().getTime(),
+            user: user._id
         });
+        const newPost = await post.save();
+
+        return res.status(200).json({
+            success: true,
+            post: newPost,
+            message: 'New post created successfully',
+        });
+    } catch (e) {
+        res.status(500).json({
+            success: false,
+            message: 'Something went wrong.',
+            error: e.message,
+        });
+    }
 }
 
 export function getAllPosts(req, res) {
@@ -64,12 +64,8 @@ export function getPostById(req, res) {
 
 
 export function updatePost(req, res) {
-    // const id = req.params.postId;
-    const id = req.body.id;
-    delete req.body.id;
+    const id = req.params.postId;
     const dataToUpdate = req.body;
-    console.log(dataToUpdate, '----');
-    console.log(id, 'id');
     Post.updateOne({ _id: id }, { $set: dataToUpdate })
         .then(() => {
             res.status(200).json({

@@ -19,7 +19,7 @@ mongoose.connect('mongodb://localhost:27017')
 });
 
 app.use('/api/', mainRoutes);
-
+// TODO remove this routes when connecting react
 app.use('/update', (req, res) => {
     res.sendFile(path.resolve('app/views/updatePost.html'));
 });
@@ -27,6 +27,7 @@ app.use('/update', (req, res) => {
 app.use('/', (req, res) => {
     res.sendFile(path.resolve('app/views/createPost.html'));
 });
+//////////////////////////////////////////////
 
 app.listen(process.env.PORT, () => {
     console.log('Listening on', process.env.PORT);
