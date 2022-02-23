@@ -6,7 +6,11 @@ import {
     getPostById,
     updatePost
 } from '../controllers/post.js';
-import { createUser } from '../controllers/user.js';
+import { createUser, login } from '../controllers/user.js';
+import {
+    authJwt,
+    authLocal
+} from '../services/auth.js';
 
 const router = express.Router();
 
@@ -16,6 +20,10 @@ router.get('/posts/:postId', getPostById);
 router.put('/posts/:postId', updatePost);
 router.delete('/posts/:postId', deletePost);
 
-router.post('/users', createUser);
-
+// router.post('/users', createUser);
+router.post('/login', authLocal, login);
+router.post('/register', createUser);
+router.get('/hello', authJwt, (req, res) => {
+    res.send('This is a private route');
+})
 export default router;

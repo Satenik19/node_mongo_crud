@@ -4,9 +4,11 @@ import User from '../models/user.js';
 export function createUser(req, res) {
     const user = new User({
         _id: mongoose.Types.ObjectId(),
-        first_name: req.body.firstName,
-        last_name: req.body.lastName,
-        phone_number: req.body.phoneNumber,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        email: req.body.email,
+        phoneNumber: req.body.phoneNumber,
+        password: req.body.password,
     });
     return user
         .save()
@@ -24,4 +26,9 @@ export function createUser(req, res) {
                 error: error.message,
             });
         });
+}
+
+export function login(req, res, next) {
+    res.status(200).json(req.user);
+    return next();
 }
