@@ -63,11 +63,11 @@ UserSchema.methods = {
         //
     },
     toJSON() {
-        return {
-            _id: this._id,
-            email: this.email,
-            token: `JWT ${this.createToken()}`,
-        };
+        // return {
+        //     _id: this._id,
+        //     email: this.email,
+        //     token: `JWT ${this.createToken()}`,
+        // };
     },
 };
 

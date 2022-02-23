@@ -23,8 +23,13 @@ const localStrategy = new LocalStrategy(localOpts, async (email, password, done)
         } else if (!user.authenticateUser(password)) {
             return done(null, false, { "message": "Wrong credentials" });
         }
+        const userData =  {
+            _id: user._id,
+            email: user.email,
+            token: `JWT ${user.createToken()}`,
+        };
 
-        return done(null, user);
+        return done(null, userData);
     } catch (e) {
 
         return done(e, false);
@@ -33,7 +38,6 @@ const localStrategy = new LocalStrategy(localOpts, async (email, password, done)
 
 const jwtStrategy = new JWTStrategy(jwtOptions, async (payload, done) => {
     try {
-        console.log(jwtOptions, 'options');
         const user = await User.findById(payload._id);
 
         if (!user) {
