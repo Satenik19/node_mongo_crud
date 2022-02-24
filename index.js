@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import mainRoutes from './app/routes/index.js';
 import cookieParser from 'cookie-parser';
 import passport from "passport";
+import cors from 'cors';
 
 const app = express();
 
@@ -12,6 +13,7 @@ app.use(express.urlencoded({
 }));
 app.use(cookieParser(process.env.COOKIE_SECRET))
 app.use(passport.initialize());
+app.use(cors());
 
 const url = process.env.MONGO_DB_CONNECTION_STRING;
 mongoose.connect(url)
