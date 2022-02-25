@@ -26,7 +26,7 @@ const localStrategy = new LocalStrategy(localOpts, async (email, password, done)
         const userData =  {
             _id: user._id,
             email: user.email,
-            token: `JWT ${user.createToken()}`,
+            token: `${user.createToken()}`,
         };
 
         return done(null, userData);

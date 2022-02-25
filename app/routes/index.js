@@ -26,4 +26,5 @@ router.post('/register', createUser);
 router.get('/hello', authJwt, (req, res) => {
     res.send('This is a private route');
 })
+
 export default router;
