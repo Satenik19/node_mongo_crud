@@ -8,7 +8,8 @@ export async function createUser(req, res) {
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             email: req.body.email,
-            phoneNumber: req.body.phoneNumber,
+            gender: req.body.gender,
+            birthday: req.body.birthday,
             password: req.body.password,
         });
         const newUser = await user.save();
