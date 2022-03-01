@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
 import User from '../models/user.js';
 
 export async function createUser(req, res) {
@@ -30,4 +31,24 @@ export async function createUser(req, res) {
 export function login(req, res, next) {
     res.status(200).json(req.user);
     return next();
+}
+
+export async function changePassword(req, res) {
+    try {
+        const userId = req.user._id;
+        const hash = await bcrypt.hash(req.body.password, 10);
+        await User.updateOne(
+            {_id: userId},
+            {$set: {password: hash}}
+        );
+        return res.status(200).json({
+            success: true,
+        });
+    } catch (e) {
+        res.status(500).json({
+            success: false,
+            message: 'Something went wrong.',
+            error: e.message,
+        });
+    }
 }
