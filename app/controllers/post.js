@@ -1,10 +1,9 @@
 import mongoose from 'mongoose';
 import Post from '../models/post.js';
-import User from '../models/user.js';
 
 export async function createPost(req, res) {
     try {
-        const user = await User.findOne({ first_name: "Satenik" });
+        const user = await req.user;
         const post = new Post({
             _id: mongoose.Types.ObjectId(),
             title: req.body.title,
@@ -28,66 +27,65 @@ export async function createPost(req, res) {
     }
 }
 
-export function getAllPosts(req, res) {
-    return Post.find()
-    .then((allPosts) => {
+export async function getAllPosts(req, res) {
+    try {
+        const posts = await Post.find({ user: req.user._id });
+
         return res.status(200).json({
             success: true,
-            posts: allPosts,
+            posts,
         });
-    })
-    .catch((err) => {
+    } catch (e) {
         res.status(500).json({
             success: false,
             message: 'Server error. Please try again.',
-            error: err.message,
+            error: e.message,
         });
-    });
+    }
 }
 
-export function getPostById(req, res) {
-    Post.findById(req.params.postId)
-        .then((post) => {
-            res.status(200).json({
-                success: true,
-                post: post,
-            });
-        })
-        .catch((err) => {
-            res.status(500).json({
-                success: false,
-                message: 'This post does not exist',
-                error: err.message,
-            });
+export async function getPostById(req, res) {
+    try {
+        const post = await Post.findById(req.params.postId);
+
+        res.status(200).json({
+            success: true,
+            post: post,
         });
+    } catch (e) {
+        res.status(500).json({
+            success: false,
+            message: 'This post does not exist',
+            error: e.message,
+        });
+    }
 }
 
-
-export function updatePost(req, res) {
+export async function updatePost(req, res) {
     const id = req.params.postId;
     const dataToUpdate = req.body;
-    Post.updateOne({ _id: id }, { $set: dataToUpdate })
-        .then(() => {
-            res.status(200).json({
-                success: true,
-                message: `Post is updated successfully`,
-                updateCause: dataToUpdate,
-            });
-        })
-        .catch((err) => {
-            res.status(500).json({
-                success: false,
-                message: 'Something went wrong',
-                error: err.message,
-            });
+    try {
+        await Post.updateOne({_id: id}, {$set: dataToUpdate});
+
+        res.status(200).json({
+            success: true,
+            message: `Post is updated successfully`,
+            updateCause: dataToUpdate,
         });
+    } catch (e) {
+        res.status(500).json({
+            success: false,
+            message: 'Something went wrong',
+            error: e.message,
+        });
+    }
 }
 
 export function deletePost(req, res) {
     const id = req.params.postId;
     Post.findByIdAndRemove(id)
         .exec()
-        .then(()=> res.status(204).json({
+        .then(()=> res.status(200).json({
             success: true,
         }))
         .catch((err) => res.status(500).json({
