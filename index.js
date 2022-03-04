@@ -2,7 +2,8 @@ import express from 'express';
 import mongoose from 'mongoose';
 import mainRoutes from './app/routes/index.js';
 import cookieParser from 'cookie-parser';
-import passport from "passport";
+import passport from 'passport';
+import multer from 'multer';
 import cors from 'cors';
 
 const app = express();

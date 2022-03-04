@@ -52,3 +52,27 @@ export async function changePassword(req, res) {
         });
     }
 }
+
+export async function uploadCover(req, res) {
+    try {
+        const file = req.file;
+        console.log( req.user, 'image');
+        const fileData = file.originalname.split('.');
+        const fileName = fileData[0];
+        const fileExt = fileData.pop();
+        const coverPhotoName= `${fileName}${req.user._id}.${fileExt}`;
+        if (file) {
+            await User.updateOne({_id: req.user._id}, {$set: { cover: coverPhotoName }});
+        }
+        // res.send(req.file)
+        return res.status(200).json({
+            success: true,
+        });
+    } catch (e) {
+        res.status(500).json({
+            success: false,
+            message: 'Something went wrong.',
+            error: e.message,
+        });
+    }
+}

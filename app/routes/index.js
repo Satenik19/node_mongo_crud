@@ -1,4 +1,6 @@
 import express from 'express';
+import multer from 'multer';
+
 import {
     createPost,
     deletePost,
@@ -6,14 +8,29 @@ import {
     getPostById,
     updatePost
 } from '../controllers/post.js';
-import { createUser, login, changePassword } from '../controllers/user.js';
+import { createUser, login, changePassword, uploadCover } from '../controllers/user.js';
 import {
     authJwt,
     authLocal
 } from '../services/auth.js';
 
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './app/uploads')
+    },
+    filename: function (req, file, cb) {
+        const fileData = file.originalname.split('.');
+        const fileName = fileData[0];
+        const fileExt = fileData.pop();
+        cb(null, `${fileName}${req.user._id}.${fileExt}`);
+    }
+});
+
+const upload = multer({ storage: storage });
+
 const router = express.Router();
 router.post('/change-password', authJwt, changePassword);
+router.post('/upload-cover', authJwt, upload.single('image'), uploadCover);
 
 router.post('/posts', authJwt, createPost);
 router.get('/posts', authJwt, getAllPosts);

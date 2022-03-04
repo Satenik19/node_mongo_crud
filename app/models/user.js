@@ -26,6 +26,11 @@ const UserSchema = new Schema({
         type: Date,
         required: true,
     },
+    cover: {
+        type: String,
+        default: null,
+        required: false,
+    },
     password: {
         type: String,
         required: [true, 'Password is required!'],
